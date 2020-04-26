@@ -11,7 +11,7 @@ There are 2 ways of installation [**Manual**](#manual-installation) and [**Autom
 1. Download the repository archive
 2. Unzip the content, copy the `.ps1aw` **hidden** folder into the **USERS home** directory ( aka `~` )
 3. Edit the `~/.bashrc` file and append the following to it
-```
+```bash
 # prompt_awesome
 source ~/.ps1aw/ps1_constructor
 if [[ -z $PS1AW_GIT_INFO ]]; then
@@ -25,10 +25,9 @@ fi
 
 ### Automatic installation
 
-You can install the package also using the `install.sh` file provided in the repository
-From any directory execute the following commands:
+You can install the package also using the `install.sh` script provided in the repository. From any directory execute the following commands:
 
-```
+```bash
 git clone https://github.com/arsdever/prompt_awesome.git
 cd prompt_awesome
 ./install.sh
