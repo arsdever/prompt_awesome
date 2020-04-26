@@ -6,7 +6,7 @@ __fn() {
   if [ $# != 0 ]; then
     echo "$git_status" | grep "$1" | wc -l
   else
-    echo "$git_status" | wc -l
+    echo "$git_status" | sed '/^\s*$/d' | wc -l
   fi
 }
 
