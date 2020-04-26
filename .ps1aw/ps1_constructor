@@ -1,0 +1,130 @@
+#!/bin/bash
+
+git_status=""
+
+__fn() {
+  if [ $# != 0 ]; then
+    echo "$git_status" | grep "$1" | wc -l
+  else
+    echo "$git_status" | wc -l
+  fi
+}
+
+__modified() {
+  echo $(__fn "^ M")
+}
+
+__added() {
+  echo $(__fn "^ A")
+}
+
+__deleted() {
+  echo $(__fn "^ D")
+}
+
+__renamed() {
+  echo $(__fn "^ R")
+}
+
+__copied() {
+  echo $(__fn "^ C")
+}
+
+__total() {
+  echo $(__fn)
+}
+
+__add_git_info() {
+  git_status=$(git status --porcelain 2>/dev/null)
+
+  # colors
+  local git_green_fg="2;12;220;12"
+  local git_red_fg="2;250;12;12"
+  local git_cyan_fg="2;12;220;250"
+  local git_yellow_fg="2;240;230;2"
+  local git_purple_fg="2;200;66;245"
+  local git_gray_fg="2;200;200;200"
+
+  # Color assignments
+  local git_modified_clr=$git_yellow_fg
+  local git_added_clr=$git_green_fg
+  local git_deleted_clr=$git_red_fg
+  local git_renamed_clr=$git_purple_fg
+  local git_copied_clr=$git_cyan_fg
+  local git_total_clr=$git_gray_fg
+
+  local branch_pattern='\[\e[1;38;'"$git_green_fg"'m\] %s '
+
+  local f1=''
+  local f2=''
+  local f3=''
+  local f4=''
+  local f5=''
+  local f6=''
+
+  local flags="${PS1AW_GIT_INFO}"
+  
+  if [ -n $flags ]; then
+    shopt -s nocasematch
+    if [[ $flags =~ "m" ]]; then
+      local f1=' \[\e[1;38;'"$git_modified_clr"'m\]'"$(__modified)"' '
+    fi
+    if [[ $flags =~ "a" ]]; then
+      local f2=' \[\e[1;38;'"$git_added_clr"'m\]'"$(__added)"' '
+    fi
+    if [[ $flags =~ "d" ]]; then
+      local f3=' \[\e[1;38;'"$git_deleted_clr"'m\]'"$(__deleted)"' '
+    fi
+    if [[ $flags =~ "r" ]]; then
+      local f4=' \[\e[1;38;'"$git_renamed_clr"'m\]'"$(__renamed)"' '
+    fi
+    if [[ $flags =~ "c" ]]; then
+      local f5=' \[\e[1;38;'"$git_copied_clr"'m\]'"$(__copied)"' '
+    fi
+    if [[ $flags =~ "t" ]]; then
+      local f6=' \[\e[1;38;'"$git_total_clr"'m\]'"$(__total)"' '
+    fi
+  fi
+
+  PS1+='$(__git_ps1 "'"$branch_pattern"''"$f1$f2$f3$f4$f5$f6"'\[\e[1;38;2;0;0;0m\]  ")'
+}
+
+__construct_prompt_1() {
+  PS1=''
+  __add_git_info
+}
+
+__construct_prompt_awesome() {
+  local last_exit_code=$?
+  local bad_exit_code_bg_color="2;175;25;0"
+  local good_exit_code_bg_color="2;110;210;5"
+  local bad_exit_code_fg_color="2;255;200;200"
+  local good_exit_code_fg_color="2;10;50;12"
+
+  local _1_color="2;156;96;40"
+  local _2_color="2;194;114;39"
+  local _3_color="2;255;150;50"
+  local _4_color="2;70;70;70"
+  local _5_color="2;0;0;0"
+
+  local _1_text_color="2;185;237;235"
+  local _2_text_color="2;24;24;24"
+
+  local _ps1='\[\e[1;38;'"$_2_text_color"';48;'"$_2_color"'m\] \u \[\e[1;38;'"$_2_color"';48;'"$_3_color"'m\]'
+  local _ps2='\[\e[1;38;'"$_2_text_color"';48;'"$_3_color"'m\] \w '
+  local _ps1_symbol='\[\e[1;38;2;0;255;0;48;'"$_4_color"'m\] $ '
+  local exit_code_bg_color=$bad_exit_code_bg_color
+  local exit_code_fg_color=$bad_exit_code_fg_color
+
+  if [ ${last_exit_code} -eq 0 ]; then
+    exit_code_bg_color=$good_exit_code_bg_color
+    exit_code_fg_color=$good_exit_code_fg_color
+  fi
+
+  PS1='\[\e[1;38;'"${exit_code_fg_color}"';48;'"${exit_code_bg_color}"'m\] '"$(printf '%3s' ${last_exit_code})"' '
+  PS1+='\[\e[1;38;'"${exit_code_bg_color}"';48;'"${_2_color}"'m\]'
+  PS1+="${_ps1}${_ps2}"'\[\e[1;38;'"$_3_color"';48;'"$_4_color"'m\]'"$git_info"
+  __add_git_info $_4_color
+  PS1+="${_ps1_symbol}"
+  PS1+='\[\e[1;38;'"${_4_color}"';48;'${exit_code_bg_color}'m\] \[\e[0m\]\[\e[1;38;'"${exit_code_bg_color}"'m\] \[\e[0m\]'
+}
