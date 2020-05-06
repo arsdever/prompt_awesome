@@ -2,7 +2,7 @@
 
 This repo contains collection of awesome prompt formatting scripts.
 
-![PromptAwesome screenshot](/readme/images/screenshot.jpeg)
+![PromptAwesome screenshot](/readme/images/screenshot.png)
 
 ## Installation
 
