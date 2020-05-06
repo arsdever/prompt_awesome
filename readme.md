@@ -2,6 +2,8 @@
 
 This repo contains collection of awesome prompt formatting scripts.
 
+![PromptAwesome screenshot](/readme/images/screenshot.jpeg)
+
 ## Installation
 
 There are 2 ways of installation [**Manual**](#manual-installation) and [**Automatic**](#automatic-installation).
@@ -33,5 +35,10 @@ cd prompt_awesome
 ./install.sh
 source ~/.bashrc
 ```
+
+### Fonts
+This styling requires fonts, which have some special characters like arrows and other stuff. I recommend installing the following ones
+- [Source code pro](https://github.com/adobe-fonts/source-code-pro)
+- [Hack](https://github.com/source-foundry/Hack)
 
 ## And here you go
