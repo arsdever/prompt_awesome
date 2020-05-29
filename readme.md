@@ -40,5 +40,6 @@ source ~/.bashrc
 This styling requires fonts, which have some special characters like arrows and other stuff. I recommend installing the following ones
 - [Source code pro](https://github.com/adobe-fonts/source-code-pro)
 - [Hack](https://github.com/source-foundry/Hack)
+- [FiraCode](https://github.com/tonsky/FiraCode)
 
 ## And here you go
